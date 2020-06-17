@@ -642,7 +642,7 @@ def load_domains(domain_csv, whole_rows=False):
             row[0] = row[0].lower()
 
             # Skip any header row.
-            if (not domains) and ((row[0] == "domain") or (row[0] == "domain name")):
+            if (not domains) and ((row[0].lower() == "domain") or (row[0].lower() == "domain name")):
                 continue
 
             if whole_rows:

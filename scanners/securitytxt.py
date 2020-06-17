@@ -26,7 +26,7 @@ def scan(domain: str, environment: dict, options: dict) -> dict:
         try:
             response = requests.get(url, allow_redirects=True, timeout=4)
             # security.txt file must have text/plain content type
-            if 'text/plain' in response.headers['content-type']:
+            if response.status_code == requests.codes.ok and 'text/plain' in response.headers['content-type']:
                 has_security_txt = True
                 contents = parse_security_txt(response.text)
                 for name, contents in contents.items():
