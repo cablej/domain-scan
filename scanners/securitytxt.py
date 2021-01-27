@@ -34,7 +34,18 @@ def scan(domain: str, environment: dict, options: dict) -> dict:
         except Exception:
             logging.debug("could not get data from %s", url)
 
+    has_vdp = results['policy_link'] != ''
+    try:
+        response = requests.get(base + '/vulnerability-disclosure-policy', allow_redirects=True, timeout=4)
+        if response.status_code == requests.codes.ok and 'vulnerability' in response.text.lower():
+            has_vdp = True
+            if results['policy_link'] == '':
+                results['policy_link'] = base + '/vulnerability-disclosure-policy'
+    except Exception:
+        logging.debug("could not get data from %s", url)
+
     results['has_security_txt'] = str(has_security_txt).lower()
+    results['has_vdp'] = str(has_vdp).lower()
 
     logging.warning("security.txt for %s complete!", domain)
     return results
@@ -76,6 +87,6 @@ field_map = {
 }
 
 headers = [
-    "has_security_txt", "policy_link", "contact", "is_non_html", "acknowledgments", "canonical", "encryption", "expires", "hiring", "preferred_languages"
+    "has_vdp", "has_security_txt", "policy_link", "contact", "is_non_html", "acknowledgments", "canonical", "encryption", "expires", "hiring", "preferred_languages"
 ]
 
